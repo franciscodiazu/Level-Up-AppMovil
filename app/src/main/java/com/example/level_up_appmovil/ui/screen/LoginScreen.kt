@@ -27,9 +27,9 @@ fun LoginScreen(
     onLoginSuccess: () -> Unit
 ) {
     // Colores definidos en el documento
-    val backgroundColor = Color(0xFF000000)
-    val primaryTextColor = Color(0xFFFFFFFF)
-    val accentColor = Color(0xFF1E90FF) // Azul Eléctrico para login
+    val backgroundColor = Color(0xFFFCFCFD)
+    val primaryTextColor = Color(0xFF1E90FF)
+    val accentColor = Color(0xFF39FF14)
 
     Box(
         modifier = Modifier

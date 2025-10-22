@@ -1,45 +1,37 @@
-package com.example.level_up_appmovil.navigation // Asegúrate que tu package sea el correcto
+package com.example.level_up_appmovil.navigation // Revisa tu package
 
-// --- IMPORTACIONES ---
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.lifecycle.viewmodel.compose.viewModel // <-- Importante para el ViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navOptions // <-- ¡IMPORTANTE PARA EL ERROR EN ROJO!
+import androidx.navigation.navOptions
 import com.example.level_up_appmovil.ui.screen.LoginScreen
 import com.example.level_up_appmovil.ui.screen.RegisterScreen
 import com.example.level_up_appmovil.ui.screen.SplashScreen
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.level_up_appmovil.viewmodel.AuthViewModel
 
-// Objeto para mantener las rutas organizadas
-object AppRoutes {
-    const val SPLASH = "splash"
-    const val LOGIN = "login"
-    const val REGISTER = "register"
-    const val HOME = "home"
-}
 
-// --- NAVEGACIÓN PRINCIPAL ---
+
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
-
-    // --- CORRECCIÓN 1 ---
-    // Instanciamos el ViewModel aquí, una sola vez.
-    // Así, LoginScreen y RegisterScreen compartirán el mismo ViewModel y estado.
+    // Instanciamos el ViewModel aquí.
+    // NOTA: Esto hará que Login y Register usen la MISMA instancia.
+    // Esto no es lo ideal, pero es lo más simple de implementar.
+    // Una mejor forma sería usar un grafo de navegación anidado.
+    // Por ahora, ¡funciona!
     val authViewModel: AuthViewModel = viewModel()
 
     NavHost(
         navController = navController,
         startDestination = AppRoutes.SPLASH
     ) {
-        // --- Pantalla SPLASH ---
         composable(AppRoutes.SPLASH) {
             SplashScreen(onTimeout = {
                 val navOptions = navOptions {
@@ -49,14 +41,9 @@ fun AppNavigation() {
             })
         }
 
-        // --- Pantalla LOGIN ---
         composable(AppRoutes.LOGIN) {
-
-            // --- CORRECCIÓN 2 ---
-            // Obtenemos el 'uiState' actual desde el ViewModel.
             val uiState by authViewModel.uiState.collectAsState()
 
-            // Ahora 'uiState' y 'authViewModel' SÍ existen y se pueden pasar.
             LoginScreen(
                 uiState = uiState,
                 viewModel = authViewModel,
@@ -72,10 +59,9 @@ fun AppNavigation() {
             )
         }
 
-        // --- Pantalla REGISTER ---
         composable(AppRoutes.REGISTER) {
             RegisterScreen(
-                viewModel = authViewModel, // Le pasamos el mismo ViewModel
+                viewModel = authViewModel,
                 onRegisterSuccess = {
                     navController.popBackStack() // Regresa a Login
                 },
@@ -85,10 +71,9 @@ fun AppNavigation() {
             )
         }
 
-        // --- Pantalla HOME (Catálogo, etc.) ---
+        // Aquí irán las pantallas de Catálogo y Perfil
         composable(AppRoutes.HOME) {
-            // Aquí irá tu pantalla de Catálogo de productos
-            // Por ejemplo: CatalogScreen()
+            // Ejemplo: CatalogScreen()
         }
     }
 }

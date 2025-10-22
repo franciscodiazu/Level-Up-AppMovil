@@ -40,8 +40,8 @@ fun RegisterScreen(
     val context = LocalContext.current
 
     // Colores del documento
-    val backgroundColor = Color(0xFF000000)
-    val primaryTextColor = Color(0xFFFFFFFF)
+    val backgroundColor = Color(0xFFFCFCFD)
+    val primaryTextColor = Color(0xFF1E90FF)
     val accentColor = Color(0xFF39FF14) // Verde Neón para registro
 
     // Observador de errores o éxito
@@ -107,7 +107,7 @@ fun RegisterScreen(
             OutlinedTextField(
                 value = uiState.birthDate?.format(DateTimeFormatter.ISO_LOCAL_DATE) ?: "",
                 onValueChange = {},
-                label = { Text("Fecha de Nacimiento (DD/MM/YYYY)") },
+                label = { Text("Fecha de Nacimiento (MM/DD/YYYY)") },
                 trailingIcon = {
                     Icon(Icons.Default.DateRange, "Select Date")
                 },
@@ -150,7 +150,7 @@ fun RegisterScreen(
             }
 
             TextButton(onClick = onBackToLoginClick) {
-                Text("¿Ya tienes cuenta? Inicia Sesión", color = accentColor)
+                Text("¿Ya tienes cuenta? Inicia Sesión", color = Color.Blue)
             }
         }
     }
