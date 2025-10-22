@@ -1,6 +1,8 @@
 package com.example.level_up_appmovil.navigation // Asegúrate que tu package sea el correcto
 
 // --- IMPORTACIONES ---
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -23,6 +25,7 @@ object AppRoutes {
 }
 
 // --- NAVEGACIÓN PRINCIPAL ---
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
