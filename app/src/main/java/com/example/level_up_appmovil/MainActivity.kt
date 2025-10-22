@@ -11,8 +11,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.level_up_appmovil.ui.screen.SplashScreen
 import com.example.level_up_appmovil.ui.theme.LevelUpAppMovilTheme
+import com.example.level_up_appmovil.ui.screen.SplashScreen
 
 class MainActivity : ComponentActivity() {
 }
@@ -21,7 +21,4 @@ class MainActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    SplashScreen(
-        onTimeout = TODO()
-    )
 }
