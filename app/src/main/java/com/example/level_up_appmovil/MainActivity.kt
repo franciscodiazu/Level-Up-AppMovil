@@ -9,14 +9,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.example.level_up_appmovil.navigation.AppNavigation // <-- Importa tu Navegación
+import com.example.level_up_appmovil.navigation.AppNavigation
 import com.example.level_up_appmovil.ui.theme.LevelUpAppMovilTheme
+
+
+
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            // Aquí se carga el tema de tu app (definido en ui/theme/Theme.kt)
+            // Aquí se carga el tema del app (definido en ui/theme/Theme.kt)
             LevelUpAppMovilTheme{
 
                 Surface(
