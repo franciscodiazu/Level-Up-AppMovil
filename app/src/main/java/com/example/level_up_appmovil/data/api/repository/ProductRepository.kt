@@ -1,6 +1,6 @@
 package com.example.level_up_appmovil.data.api.repository
 
-import com.example.level_up_appmovil.model.Product
+import com.example.level_up_appmovil.data.api.model.Product
 
 class ProductRepository {
     fun getSampleProducts(): List<Product> {
