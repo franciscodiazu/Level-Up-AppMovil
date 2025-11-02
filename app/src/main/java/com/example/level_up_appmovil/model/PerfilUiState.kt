@@ -1,4 +1,6 @@
 package com.example.level_up_appmovil.model
 
-class PerfilUiState {
-}
+data class PerfilUiState(
+    val email: String = "Cargando...",
+    val isDuocMember: Boolean = false
+)
