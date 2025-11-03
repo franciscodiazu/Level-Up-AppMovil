@@ -17,5 +17,7 @@ data class AuthUiState(
     val showDatePicker: Boolean = false,
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
-    val registrationSuccess: Boolean = false
+    val registrationSuccess: Boolean = false,
+
+    val loginSuccess: Boolean = false
 )

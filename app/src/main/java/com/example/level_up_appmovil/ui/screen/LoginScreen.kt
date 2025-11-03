@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -30,6 +31,15 @@ fun LoginScreen(
     val backgroundColor = Color(0xFFFCFCFD)
     val primaryTextColor = Color(0xFF1E90FF)
     val accentColor = Color(0xFF39FF14)
+
+    // --- AQUI ESTA EL CAMBIO ---
+    // Observamos el estado. Si 'loginSuccess' es true, navegamos.
+    LaunchedEffect(uiState.loginSuccess) {
+        if (uiState.loginSuccess) {
+            onLoginSuccess() // Navega a la HomeScreen
+            viewModel.consumeLoginSuccess() // Resetea el flag
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -68,10 +78,11 @@ fun LoginScreen(
                 CircularProgressIndicator(color = accentColor)
             } else {
                 Button(
+                    // --- CAMBIO AQUI ---
+                    // Ahora el botón SÓLO llama al viewModel.
+                    // El LaunchedEffect de arriba se encarga de navegar.
                     onClick = {
                         viewModel.onLoginClick()
-                        // Simulación de login exitoso (borrar esto cuando conectes API)
-                        onLoginSuccess()
                     },
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(containerColor = accentColor)
@@ -89,6 +100,7 @@ fun LoginScreen(
     }
 }
 
+// ... (El preview se mantiene igual)
 @Preview(showBackground = true)
 @Composable
 fun LoginScreenPreview() {
