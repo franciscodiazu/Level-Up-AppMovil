@@ -7,14 +7,14 @@ import java.time.LocalDate
 
 @Entity(
     tableName = "users",
-    indices = [Index(value = ["email"], unique = true)] // Email único
+    indices = [Index(value = ["email"], unique = true)]
 )
 data class User(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val email: String,
-    val pass: String, // En una app real, esto debe ser un hash
+    val pass: String,
     val birthDate: LocalDate,
     val isDuocMember: Boolean,
-    val photoUri: String? = null // Para la foto de perfil
+    val photoUri: String? = null
 )

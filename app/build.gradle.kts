@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
-
 }
 
 android {
@@ -42,9 +41,6 @@ android {
     buildFeatures {
         compose = true
     }
-    composeOptions {
-        //kotlinCompilerExtensionVersion = "1.5.1"
-    }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -53,8 +49,11 @@ android {
 }
 
 dependencies {
+    // Navegación y Datos
     implementation("androidx.navigation:navigation-compose:2.7.7")
     implementation("androidx.datastore:datastore-preferences:1.1.1")
+
+    // Core Android y Compose
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -64,9 +63,35 @@ dependencies {
     implementation("androidx.compose.ui:ui-text-google-fonts:1.6.7")
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+
+    // --- IMPORTANTE: Iconos Extendidos (Para el icono QR) ---
+    implementation("androidx.compose.material:material-icons-extended")
+    // --------------------------------------------------------
+
     implementation(libs.androidx.navigation.compose)
+
+    // Lifecycle
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
+
+    // Room (Base de Datos)
+    val room_version = "2.6.1"
+    implementation("androidx.room:room-runtime:$room_version")
+    ksp("androidx.room:room-compiler:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
+
+    // Coil (Imágenes)
+    implementation("io.coil-kt:coil-compose:2.6.0")
+
+    // Cámara y QR
+    val cameraxVersion = "1.3.3"
+    implementation("androidx.camera:camera-core:$cameraxVersion")
+    implementation("androidx.camera:camera-camera2:$cameraxVersion")
+    implementation("androidx.camera:camera-lifecycle:$cameraxVersion")
+    implementation("androidx.camera:camera-view:$cameraxVersion")
+    implementation("com.google.mlkit:barcode-scanning:17.2.0")
+
+    // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -74,23 +99,4 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
-
-    // Room
-    val room_version = "2.6.1"
-    implementation("androidx.room:room-runtime:$room_version")
-    ksp("androidx.room:room-compiler:$room_version")
-    implementation("androidx.room:room-ktx:$room_version")
-
-    // Coil
-    implementation("io.coil-kt:coil-compose:2.6.0")
-
-    // Accompanist Permissions
-    implementation("com.google.accompanist:accompanist-permissions:0.34.0")
-
-    // CameraX
-    val cameraxVersion = "1.3.3"
-    implementation("androidx.camera:camera-core:$cameraxVersion")
-    implementation("androidx.camera:camera-camera2:$cameraxVersion")
-    implementation("androidx.camera:camera-lifecycle:$cameraxVersion")
-    implementation("androidx.camera:camera-view:$cameraxVersion")
 }
