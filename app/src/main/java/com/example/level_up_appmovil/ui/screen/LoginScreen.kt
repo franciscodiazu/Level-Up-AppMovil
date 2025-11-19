@@ -1,15 +1,17 @@
-package com.example.level_up_appmovil.ui.screen // Revisa tu package
+package com.example.level_up_appmovil.ui.screen
 
+import android.os.Build
+import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,6 +21,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.level_up_appmovil.model.AuthUiState
 import com.example.level_up_appmovil.viewmodel.AuthViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
@@ -32,15 +35,25 @@ fun LoginScreen(
     val primaryTextColor = Color(0xFF1E90FF)
     val accentColor = Color(0xFF39FF14)
 
-    // --- AQUI ESTA EL CAMBIO ---
-    // Observamos el estado. Si 'loginSuccess' es true, navegamos.
-    LaunchedEffect(uiState.loginSuccess) {
-        if (uiState.loginSuccess) {
-            onLoginSuccess() // Navega a la HomeScreen
-            viewModel.consumeLoginSuccess() // Resetea el flag
+    val context = LocalContext.current
+
+    // 1. Manejo de Errores (Toast)
+    LaunchedEffect(uiState.errorMessage) {
+        uiState.errorMessage?.let { error ->
+            Toast.makeText(context, error, Toast.LENGTH_LONG).show()
+            viewModel.dismissError() // Limpia el error del estado
         }
     }
 
+    // 2. Manejo de Éxito (Navegación)
+    LaunchedEffect(uiState.loginSuccess) {
+        if (uiState.loginSuccess) {
+            onLoginSuccess() // Navega a la pantalla Home
+            viewModel.consumeLoginSuccess() // Resetea el flag para evitar bucles
+        }
+    }
+
+    // 3. Interfaz de Usuario
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -78,10 +91,8 @@ fun LoginScreen(
                 CircularProgressIndicator(color = accentColor)
             } else {
                 Button(
-                    // --- CAMBIO AQUI ---
-                    // Ahora el botón SÓLO llama al viewModel.
-                    // El LaunchedEffect de arriba se encarga de navegar.
                     onClick = {
+                        // Solo llamamos a la acción, la navegación la maneja el LaunchedEffect
                         viewModel.onLoginClick()
                     },
                     modifier = Modifier.fillMaxWidth(),
@@ -100,13 +111,12 @@ fun LoginScreen(
     }
 }
 
-// ... (El preview se mantiene igual)
 @Preview(showBackground = true)
 @Composable
 fun LoginScreenPreview() {
     LoginScreen(
         uiState = AuthUiState(),
-        viewModel = viewModel(), // VM de preview
+        viewModel = viewModel(),
         onRegisterClick = {},
         onLoginSuccess = {}
     )
