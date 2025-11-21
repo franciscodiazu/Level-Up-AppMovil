@@ -40,10 +40,9 @@ fun RegisterScreen(
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
 
-    val backgroundColor = Color(0xFFFCFCFD)
-    val primaryTextColor = Color(0xFF1E90FF)
-    val accentColor = Color(0xFF39FF14)
-
+    val backgroundColor = Color(0xFF000000)
+    val primaryTextColor = Color(0xFF1AAF25)
+    val accentColor = Color(0xFF00488D)
     // Mostrar mensaje de éxito o error general
     LaunchedEffect(uiState.successMessage, uiState.errorMessage) {
         uiState.errorMessage?.let {

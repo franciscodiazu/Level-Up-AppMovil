@@ -41,7 +41,7 @@ fun PerfilScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFFCFCFD))
+            .background(Color(0xFF000000))
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -57,13 +57,13 @@ fun PerfilScreen(
         Text(
             text = "Bienvenido,",
             fontSize = 20.sp,
-            color = Color.Gray
+            color = Color.Green
         )
         Text(
             text = uiState.email,
             fontSize = 24.sp,
             fontWeight = FontWeight.Medium,
-            color = Color.Black
+            color = Color.White
         )
 
         Spacer(modifier = Modifier.height(16.dp))

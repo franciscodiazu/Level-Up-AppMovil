@@ -70,7 +70,7 @@ fun CartScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFFCFCFD))
+            .background(Color(0xFF000000))
             .padding(16.dp)
     ) {
         Text(

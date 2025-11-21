@@ -31,9 +31,9 @@ fun LoginScreen(
     onLoginSuccess: () -> Unit
 ) {
     // Colores definidos en el documento
-    val backgroundColor = Color(0xFFFCFCFD)
-    val primaryTextColor = Color(0xFF1E90FF)
-    val accentColor = Color(0xFF39FF14)
+    val backgroundColor = Color(0xFF000000)
+    val primaryTextColor = Color(0xFF1AAF25)
+    val accentColor = Color(0xFF00488D)
 
     val context = LocalContext.current
 
@@ -111,13 +111,3 @@ fun LoginScreen(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun LoginScreenPreview() {
-    LoginScreen(
-        uiState = AuthUiState(),
-        viewModel = viewModel(),
-        onRegisterClick = {},
-        onLoginSuccess = {}
-    )
-}
