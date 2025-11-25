@@ -13,13 +13,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import com.example.level_up_appmovil.data.api.model.LocalProduct
 
-@Database(entities = [User::class], version = 1, exportSchema = false)
+@Database(entities = [User::class, LocalProduct::class], version = 2, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
-
     abstract fun userDao(): UserDao
-
     companion object {
         @Volatile
         private var INSTANCE: AppDatabase? = null
@@ -56,7 +55,8 @@ abstract class AppDatabase : RoomDatabase() {
         @RequiresApi(Build.VERSION_CODES.O)
         suspend fun populateDatabase(userDao: UserDao) {
             // Usuario ADMIN
-            userDao.insert(
+            // Usamos insertUser en lugar del antiguo 'insert'
+            userDao.insertUser(
                 User(
                     id = 0,
                     email = "admin@duocuc.cl",
@@ -68,7 +68,8 @@ abstract class AppDatabase : RoomDatabase() {
             )
 
             // Usuario CLIENTE
-            userDao.insert(
+            // Usamos insertUser también aquí
+            userDao.insertUser(
                 User(
                     id = 0,
                     email = "cliente@duocuc.cl",

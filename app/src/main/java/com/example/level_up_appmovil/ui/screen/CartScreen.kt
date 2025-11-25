@@ -1,7 +1,8 @@
 package com.example.level_up_appmovil.ui.screen
 
 import android.widget.Toast
-import androidx.compose.foundation.Image
+// IMPORTANTE: Asegúrate de tener la dependencia de Coil en tu build.gradle
+import coil.compose.AsyncImage
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -17,7 +18,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -145,13 +145,13 @@ fun CartItemCard(product: Product, onRemove: () -> Unit) {
             modifier = Modifier.padding(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(
-                painter = painterResource(id = product.imageRes),
+            AsyncImage(
+                model = product.image, // Asegúrate que tu modelo Product tenga este campo
                 contentDescription = product.name,
                 modifier = Modifier
                     .size(60.dp)
                     .clip(RoundedCornerShape(8.dp)),
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Fit
             )
             Spacer(modifier = Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {

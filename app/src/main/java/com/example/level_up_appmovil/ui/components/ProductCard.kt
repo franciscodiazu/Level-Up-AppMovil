@@ -1,6 +1,5 @@
 package com.example.level_up_appmovil.ui.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -12,10 +11,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage // <--- IMPORTANTE
 import com.example.level_up_appmovil.data.api.model.Product
 import java.text.NumberFormat
 import java.util.*
@@ -23,10 +22,10 @@ import java.util.*
 @Composable
 fun ProductCard(
     product: Product,
-    onAddClick: () -> Unit // <--- NUEVO PARAMETRO: La acción al pulsar el botón
+    onAddClick: () -> Unit
 ) {
-    val format = NumberFormat.getCurrencyInstance(Locale("es", "CL"))
-    format.maximumFractionDigits = 0
+    // Usamos Locale.US porque la API viene en dólares, o puedes convertirlo
+    val format = NumberFormat.getCurrencyInstance(Locale.US)
 
     Card(
         modifier = Modifier
@@ -37,24 +36,24 @@ fun ProductCard(
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
         Column {
-            // Imagen
-            Image(
-                painter = painterResource(id = product.imageRes),
+            // --- CAMBIO: AsyncImage para cargar URL ---
+            AsyncImage(
+                model = product.image,
                 contentDescription = product.name,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(150.dp)
                     .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Fit // Fit queda mejor para productos variados
             )
 
-            // Contenido
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
                     text = product.name,
-                    fontSize = 20.sp,
+                    fontSize = 18.sp, // Un poco más chico porque los títulos de la API son largos
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF1E90FF)
+                    color = Color(0xFF1E90FF),
+                    maxLines = 2 // Limitar líneas
                 )
                 Text(
                     text = product.category,
@@ -70,10 +69,9 @@ fun ProductCard(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // --- BOTÓN AGREGAR ---
                 Button(
-                    onClick = onAddClick, // Usamos la acción que nos pasaron
-                    modifier = Modifier.align(Alignment.End), // Alineado a la derecha
+                    onClick = onAddClick,
+                    modifier = Modifier.align(Alignment.End),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1E90FF))
                 ) {
                     Icon(Icons.Default.Add, contentDescription = null, tint = Color.White)

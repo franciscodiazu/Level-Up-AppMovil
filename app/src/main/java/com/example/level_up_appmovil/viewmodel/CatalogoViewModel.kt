@@ -1,12 +1,14 @@
 package com.example.level_up_appmovil.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.level_up_appmovil.data.api.repository.ProductRepository
 import com.example.level_up_appmovil.model.CatalogoUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class CatalogoViewModel : ViewModel() {
 
@@ -20,8 +22,10 @@ class CatalogoViewModel : ViewModel() {
     }
 
     private fun loadProducts() {
-        // Obtenemos los productos de muestra del repositorio
-        val sampleProducts = productRepository.getSampleProducts()
-        _uiState.update { it.copy(products = sampleProducts) }
+        viewModelScope.launch {
+            // Llamamos al repositorio en segundo plano
+            val productsList = productRepository.getProducts()
+            _uiState.update { it.copy(products = productsList) }
+        }
     }
 }

@@ -110,4 +110,8 @@ dependencies {
     // Para usar Navigation en pruebas
     androidTestImplementation("androidx.navigation:navigation-testing:2.7.5")
 
+    // dependencia para API REST FakeStoreAPI
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
 }

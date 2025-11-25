@@ -16,5 +16,7 @@ data class User(
     val pass: String,
     val birthDate: LocalDate,
     val isDuocMember: Boolean,
-    val photoUri: String? = null
+    val photoUri: String? = null,
+    val name: String = "",
+    val phone: String = ""
 )
