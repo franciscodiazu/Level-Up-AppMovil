@@ -27,9 +27,6 @@ class MainActivity : ComponentActivity() {
                     // El color de fondo se toma del tema
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    // --- ¡ESTA ES LA LÍNEA CLAVE! ---
-                    // Aquí le dices a la app que inicie tu
-                    // sistema de navegación.
                     AppNavigation()
                 }
             }

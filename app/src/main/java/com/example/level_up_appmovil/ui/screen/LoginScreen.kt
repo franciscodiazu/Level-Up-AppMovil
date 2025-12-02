@@ -3,15 +3,15 @@ package com.example.level_up_appmovil.ui.screen
 import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.compose.animation.Animatable //
-import androidx.compose.animation.core.FastOutLinearInEasing //
-import androidx.compose.animation.core.LinearOutSlowInEasing //
-import androidx.compose.animation.core.tween //
+import androidx.compose.animation.Animatable // Necesario para la animación de color
+import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect //
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -35,40 +35,44 @@ fun LoginScreen(
     onRegisterClick: () -> Unit,
     onLoginSuccess: () -> Unit
 ) {
-    // Colores definidos en el documento original
+    // Definición de colores del tema
     val backgroundColor = Color(0xFF000000)
     val primaryTextColor = Color(0xFF1AAF25)
     val accentColor = Color(0xFF00488D)
 
     val context = LocalContext.current
-    val scope = rememberCoroutineScope() // Scope para lanzar la animación sin interrupciones
 
-    // --- CONFIGURACIÓN DE ANIMACIÓN ---
-    // 1. Estado animable para el color de superposición (empieza transparente)
+    // Scope para ejecutar la animación independientemente de la recomposición
+    val scope = rememberCoroutineScope()
+
+    // --- CONFIGURACIÓN DE LA ANIMACIÓN ---
+    // 1. Variable que controla el color de la capa superior (empieza transparente)
     val screenOverlayColor = remember { Animatable(Color.Transparent) }
-    // 2. Color del flash (Rojo semitransparente)
+
+    // 2. Definimos el color del "Flash" (Rojo semitransparente)
     val errorFlashColor = Color.Red.copy(alpha = 0.5f)
 
-    // 1. Manejo de Errores y Animación
+    // 1. Manejo de Errores con Animación
     LaunchedEffect(uiState.errorMessage) {
         uiState.errorMessage?.let { error ->
-            // A) Disparar animación de error (Flash Rojo)
-            // Usamos 'scope.launch' para que la animación termine aunque 'errorMessage' se limpie rápido
+            // A) Disparamos la animación visual
             scope.launch {
+                // Fase 1: Cambiar a rojo rápido (golpe visual)
                 screenOverlayColor.animateTo(
                     targetValue = errorFlashColor,
                     animationSpec = tween(durationMillis = 150, easing = FastOutLinearInEasing)
                 )
+                // Fase 2: Desvanecer a transparente suavemente
                 screenOverlayColor.animateTo(
                     targetValue = Color.Transparent,
-                    animationSpec = tween(durationMillis = 400, easing = LinearOutSlowInEasing)
+                    animationSpec = tween(durationMillis = 500, easing = LinearOutSlowInEasing)
                 )
             }
 
-            // B) Mostrar mensaje al usuario
+            // B) Mostramos el mensaje de texto (Toast)
             Toast.makeText(context, error, Toast.LENGTH_LONG).show()
 
-            // C) Limpiar el error del estado
+            // C) Limpiamos el estado del error en el ViewModel
             viewModel.dismissError()
         }
     }
@@ -76,28 +80,28 @@ fun LoginScreen(
     // 2. Manejo de Éxito (Navegación)
     LaunchedEffect(uiState.loginSuccess) {
         if (uiState.loginSuccess) {
-            onLoginSuccess() // Navega a la pantalla Home
-            viewModel.consumeLoginSuccess() // Resetea el flag para evitar bucles
+            onLoginSuccess() // Navegar al Home
+            viewModel.consumeLoginSuccess()
         }
     }
 
-    // 3. Interfaz de Usuario
+    // 3. Estructura Visual
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(backgroundColor), // Fondo base negro
+            .background(backgroundColor), // Fondo negro base
         contentAlignment = Alignment.Center
     ) {
         // --- CAPA DE ANIMACIÓN (NUEVA) ---
-        // Se superpone al fondo pero está detrás del contenido.
-        // Su color cambia dinámicamente según 'screenOverlayColor'.
+        // Esta caja cubre toda la pantalla. Su color de fondo es dinámico.
+        // Normalmente es transparente, pero se vuelve roja cuando hay error.
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(screenOverlayColor.value)
         )
 
-        // --- CONTENIDO DEL FORMULARIO ---
+        // --- CONTENIDO DEL LOGIN ---
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(16.dp)
@@ -110,12 +114,12 @@ fun LoginScreen(
             )
             Spacer(modifier = Modifier.height(32.dp))
 
+            // Campo Email
             OutlinedTextField(
                 value = uiState.loginEmail,
                 onValueChange = { viewModel.onLoginEmailChange(it) },
                 label = { Text("Correo Electrónico") },
                 modifier = Modifier.fillMaxWidth(),
-                // Ajuste visual para que se vea bien sobre fondo negro/rojo
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedTextColor = Color.White,
                     unfocusedTextColor = Color.White,
@@ -127,6 +131,7 @@ fun LoginScreen(
             )
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Campo Contraseña
             OutlinedTextField(
                 value = uiState.loginPass,
                 onValueChange = { viewModel.onLoginPassChange(it) },
@@ -144,14 +149,12 @@ fun LoginScreen(
             )
             Spacer(modifier = Modifier.height(32.dp))
 
+            // Botón o Carga
             if (uiState.isLoading) {
                 CircularProgressIndicator(color = accentColor)
             } else {
                 Button(
-                    onClick = {
-                        // Solo llamamos a la acción, la navegación la maneja el LaunchedEffect
-                        viewModel.onLoginClick()
-                    },
+                    onClick = { viewModel.onLoginClick() },
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(containerColor = accentColor)
                 ) {
