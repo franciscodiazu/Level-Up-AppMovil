@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.filled.Star // Icono para "Local"
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -19,24 +20,31 @@ import com.example.level_up_appmovil.viewmodel.CartViewModel
 fun HomeScreen(
     onLogout: () -> Unit
 ) {
-    // Estado para saber qué pestaña está seleccionada (0=Inicio, 1=Perfil, 2=Carrito, 3=QR, 4=Admin)
+    // 0: Global (API), 1: Local (Tus Productos), 2: Carrito, etc.
     var selectedTab by remember { mutableIntStateOf(0) }
 
-    // ViewModel del carrito compartido
     val cartViewModel: CartViewModel = viewModel()
 
     Scaffold(
         bottomBar = {
             NavigationBar(containerColor = Color.White) {
-                // 1. Catálogo (Inicio) -> Tab 0
+                // 1. API (FakeStore)
                 NavigationBarItem(
-                    icon = { Icon(Icons.Default.Home, "Catálogo") },
-                    label = { Text("Inicio") },
+                    icon = { Icon(Icons.Default.Home, "Global") },
+                    label = { Text("Global") },
                     selected = selectedTab == 0,
                     onClick = { selectedTab = 0 }
                 )
 
-                // 2. Carrito -> Tab 2 (Mantengo tu orden visual original)
+                // 2. LOCAL (Tus productos del Drawable) - NUEVO
+                NavigationBarItem(
+                    icon = { Icon(Icons.Default.Star, "Local") },
+                    label = { Text("Local") },
+                    selected = selectedTab == 1,
+                    onClick = { selectedTab = 1 }
+                )
+
+                // 3. Carrito
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.ShoppingCart, "Carrito") },
                     label = { Text("Carrito") },
@@ -44,42 +52,44 @@ fun HomeScreen(
                     onClick = { selectedTab = 2 }
                 )
 
-                // 3. Scanner QR -> Tab 3
+                // 4. QR
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.QrCodeScanner, "Scan") },
-                    label = { Text("QR") },
+                    label = { Text("Scan") },
                     selected = selectedTab == 3,
                     onClick = { selectedTab = 3 }
                 )
 
-                // 4. Perfil -> Tab 1
+                // 5. Perfil
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.Person, "Perfil") },
                     label = { Text("Perfil") },
-                    selected = selectedTab == 1,
-                    onClick = { selectedTab = 1 }
+                    selected = selectedTab == 4,
+                    onClick = { selectedTab = 4 }
                 )
 
-                // 5. Admin (NUEVO) -> Tab 4
+                // 6. Admin
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.Settings, "Admin") },
                     label = { Text("Admin") },
-                    selected = selectedTab == 4,
-                    onClick = { selectedTab = 4 }
+                    selected = selectedTab == 5,
+                    onClick = { selectedTab = 5 }
                 )
             }
         }
     ) { paddingValues ->
-        // Contenido principal que cambia según la pestaña
         Box(modifier = Modifier.padding(paddingValues)) {
             when (selectedTab) {
-                0 -> CatalogoScreen(
+                0 -> CatalogoScreen( // Productos de Internet
                     onAddToCart = { product -> cartViewModel.addToCart(product) }
                 )
-                1 -> PerfilScreen(onLogout = onLogout)
+                1 -> NuestrosProductosScreen( // <--- TUS PRODUCTOS LOCALES
+                    onAddToCart = { product -> cartViewModel.addToCart(product) }
+                )
                 2 -> CartScreen(viewModel = cartViewModel)
                 3 -> QrScannerScreen()
-                4 -> AdminScreen() // <--- Aquí cargamos la pantalla de gestión de productos
+                4 -> PerfilScreen(onLogout = onLogout)
+                5 -> AdminScreen()
             }
         }
     }

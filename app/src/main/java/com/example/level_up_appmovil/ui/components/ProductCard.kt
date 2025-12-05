@@ -14,7 +14,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage // <--- IMPORTANTE
+import coil.compose.AsyncImage
 import com.example.level_up_appmovil.data.api.model.Product
 import java.text.NumberFormat
 import java.util.*
@@ -24,8 +24,10 @@ fun ProductCard(
     product: Product,
     onAddClick: () -> Unit
 ) {
-    // Usamos Locale.US porque la API viene en dólares, o puedes convertirlo
-    val format = NumberFormat.getCurrencyInstance(Locale.US)
+    // CAMBIO: Usamos Locale("es", "CL") para formato chileno (ej: $10.990)
+    val format = NumberFormat.getCurrencyInstance(Locale("es", "CL"))
+    // Quitamos decimales para que se vea más limpio (en pesos no se usan centavos)
+    format.maximumFractionDigits = 0
 
     Card(
         modifier = Modifier
@@ -36,7 +38,6 @@ fun ProductCard(
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
         Column {
-            // --- CAMBIO: AsyncImage para cargar URL ---
             AsyncImage(
                 model = product.image,
                 contentDescription = product.name,
@@ -44,22 +45,23 @@ fun ProductCard(
                     .fillMaxWidth()
                     .height(150.dp)
                     .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
-                contentScale = ContentScale.Fit // Fit queda mejor para productos variados
+                contentScale = ContentScale.Fit
             )
 
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
                     text = product.name,
-                    fontSize = 18.sp, // Un poco más chico porque los títulos de la API son largos
+                    fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF1E90FF),
-                    maxLines = 2 // Limitar líneas
+                    maxLines = 2
                 )
                 Text(
                     text = product.category,
                     fontSize = 14.sp,
                     color = Color.Gray
                 )
+                // Aquí se mostrará el precio con formato chileno
                 Text(
                     text = format.format(product.price),
                     fontSize = 18.sp,

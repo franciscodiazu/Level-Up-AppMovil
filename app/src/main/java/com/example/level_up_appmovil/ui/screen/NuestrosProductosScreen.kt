@@ -7,29 +7,23 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.level_up_appmovil.data.LocalProductsData // Importamos tu lista
 import com.example.level_up_appmovil.data.api.model.Product
 import com.example.level_up_appmovil.ui.components.ProductCard
-import com.example.level_up_appmovil.viewmodel.CatalogoViewModel
 
 @Composable
-fun CatalogoScreen(
-    viewModel: CatalogoViewModel = viewModel(),
+fun NuestrosProductosScreen(
     onAddToCart: (Product) -> Unit
 ) {
-    val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
-
-    // Valor del dólar fijo (puedes ajustarlo)
-    val dolarPrice = 980.0
+    // Obtenemos la lista directa del objeto
+    val products = LocalProductsData.products
 
     Column(
         modifier = Modifier
@@ -38,32 +32,28 @@ fun CatalogoScreen(
             .padding(16.dp)
     ) {
         Text(
-            text = "Catálogo Global",
+            text = "Productos Level Up",
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
             color = Color(0xFF1E90FF)
         )
+        Text(
+            text = "Exclusivos de la tienda",
+            fontSize = 14.sp,
+            color = Color.Gray
+        )
+
         Spacer(modifier = Modifier.height(16.dp))
 
         LazyColumn(
             modifier = Modifier.fillMaxSize()
         ) {
-            items(uiState.products) { product ->
-
-                // --- CONVERSIÓN DE PRECIO ---
-                // Creamos un nuevo producto con el precio convertido a CLP
-                // Multiplicamos por el dólar y redondeamos para evitar decimales extraños
-                val precioEnPesos = product.price * dolarPrice
-
-                val productCLP = product.copy(
-                    price = precioEnPesos
-                )
-
+            items(products) { product ->
                 ProductCard(
-                    product = productCLP, // Pasamos el producto convertido
+                    product = product,
                     onAddClick = {
-                        onAddToCart(productCLP) // Agregamos al carrito el producto EN PESOS
-                        Toast.makeText(context, "Agregado: ${productCLP.name}", Toast.LENGTH_SHORT).show()
+                        onAddToCart(product)
+                        Toast.makeText(context, "Agregado: ${product.name}", Toast.LENGTH_SHORT).show()
                     }
                 )
             }
